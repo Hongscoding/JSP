@@ -1,5 +1,6 @@
 package config;
 
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
@@ -17,11 +18,10 @@ public class DB {
 	private final String USER = "root";
 	private final String PASS = "1234";
 
-	public void getConnection() throws SQLException {
+	public Connection getConnection() throws SQLException, ClassNotFoundException {
 		
-		//2단계
-		DriverManager.getConnection(HOST, USER, PASS);
-		
+		Class.forName("com.mysql.cj.jdbc.Driver");
+		return DriverManager.getConnection(HOST, USER, PASS);
 	}
 	
 	
