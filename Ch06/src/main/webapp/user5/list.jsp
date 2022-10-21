@@ -19,15 +19,15 @@ List<User5Bean> users = new ArrayList<>();
 		users = new ArrayList<>();
 		
 		while(rs.next()){
-	User5Bean ub5 = new User5Bean();
-	ub5.setUid(rs.getString(1));
-	ub5.setName(rs.getString(2));
-	ub5.setBirth(rs.getString(3));
-	ub5.setGender(rs.getInt(4));
-	ub5.setAge(rs.getInt(5));
-	ub5.setAddress(rs.getString(6));
-	ub5.setHp(rs.getString(7));
-	users.add(ub5);
+			User5Bean ub5 = new User5Bean();
+			ub5.setUid(rs.getString(1));
+			ub5.setName(rs.getString(2));
+			ub5.setBirth(rs.getString(3));
+			ub5.setGender(rs.getInt(4));
+			ub5.setAge(rs.getInt(5));
+			ub5.setAddress(rs.getString(6));
+			ub5.setHp(rs.getString(7));
+			users.add(ub5);
 		}
 		
 		conn.close();
