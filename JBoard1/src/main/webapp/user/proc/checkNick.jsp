@@ -1,7 +1,8 @@
+<%@page import="kr.co.jboard1.db.sql"%>
+<%@page import="kr.co.jboard1.db.DBCP"%>
 <%@page import="com.google.gson.JsonObject"%>
 <%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.PreparedStatement"%>
-<%@page import="config.DBCP"%>
 <%@page import="java.sql.Connection"%>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <%
@@ -12,8 +13,7 @@
 	
 	try{
 		Connection conn = DBCP.getConnection();
-		String sql = ("select count(`nick`) from `board_user` where `nick`");
-		PreparedStatement psmt = conn.prepareStatement(sql);
+		PreparedStatement psmt = conn.prepareStatement(sql.SELECT_COUNT_NICK);
 		ResultSet rs = psmt.executeQuery();
 		
 		if(rs.next()){

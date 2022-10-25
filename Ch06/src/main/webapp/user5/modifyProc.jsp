@@ -1,4 +1,4 @@
-<%@page import="config.DBCP"%>
+<%@page import="config.*"%>
 <%@page import="java.sql.PreparedStatement"%>
 <%@page import="java.sql.Connection"%>
 <%@page import="config.JDBC"%>
