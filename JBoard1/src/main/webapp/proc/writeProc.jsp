@@ -1,3 +1,5 @@
+<%@page import="kr.co.jboard1.bean.ArticleBean"%>
+<%@page import="kr.co.jboard1.dao.ArticleDAO"%>
 <%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.Statement"%>
 <%@page import="java.io.File"%>
@@ -26,41 +28,16 @@
 	String regip   = request.getRemoteAddr();
 	
 	//System.out.println("fname : "+fname);
-	int parent = 0;
+	ArticleBean article = new ArticleBean();
+	article.setTitle(title);
+	article.setContent(content);
+	article.setUid(uid);
+	article.setFname(fname);
+	article.setRegip(regip);
 	
-	try{
-		Connection conn = DBCP.getConnection();
-		
-		// 트랜잭션 시작
-		conn.setAutoCommit(false); // 트랜잭션으로 INSERT와 SELECT를 한번에 작업
-		
-		Statement stmt = conn.createStatement();
-		PreparedStatement psmt = conn.prepareStatement(sql.INSERT_ARTICLE);
-		
-		psmt.setString(1, title);
-		psmt.setString(2, content);
-		psmt.setInt(3, fname == null ? 0 : 1);
-		psmt.setString(4, uid);
-		psmt.setString(5, regip);
-		
-		psmt.executeUpdate(); // INSERT
-		ResultSet rs = stmt.executeQuery(sql.SELECT_MAX_NO); // SELECT
-		
-		// 작업 확정
-		conn.commit();
-		
-		if(rs.next()){
-			parent = rs.getInt(1);
-		}
-		
-		rs.close();
-		stmt.close();
-		psmt.close();
-		conn.close();
-		
-	} catch(Exception e){
-		e.printStackTrace();
-	}
+	
+	ArticleDAO dao = ArticleDAO.getInstance();
+	int parent = dao.insertArticle(article);
 	
 	// 파일을 첨부 했으면 파일처리
 	if(fname != null){
@@ -71,27 +48,15 @@
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss_");
 		String now = sdf.format(new Date());
-		String newFname = now+uid+ext; // 년월일분초_아아디.확장자
+		String newName = now+uid+ext; // 년월일분초_아아디.확장자
 		
 		File oriFile = new File(savePath+"/"+fname);
-		File newFile = new File(savePath+"/"+newFname);
+		File newFile = new File(savePath+"/"+newName);
 		
 		oriFile.renameTo(newFile);
 		
 		// 파일테이블 저장
-		try{
-			Connection conn = DBCP.getConnection();
-			PreparedStatement psmt = conn.prepareStatement(sql.INSERT_FILE);
-			psmt.setInt(1, parent);
-			psmt.setString(2, newFname);
-			psmt.setString(3, fname);
-			
-			psmt.executeUpdate();
-			
-		} catch(Exception e){
-			
-			
-		}
+		dao.insertFile(parent, newName, fname);
 		
 		
 	}
