@@ -79,20 +79,47 @@ public class ArticleDAO {
 		
 	}
 	
-	public void insertComment(ArticleBean comment) {
+	public ArticleBean insertComment(ArticleBean comment) {
+		
+		ArticleBean article = null;
 		
 		try{
 			Connection conn = DBCP.getConnection();
+			// 트랜잭션 시작
+			conn.setAutoCommit(false);
+			
 			PreparedStatement psmt = conn.prepareStatement(sql.INSERT_COMMENT);	
+			Statement stmt = conn.createStatement();
+			
 			psmt.setInt(1, comment.getParent());
 			psmt.setString(2, comment.getContent());
 			psmt.setString(3, comment.getUid());
 			psmt.setString(4, comment.getRegip());
+			
 			psmt.executeUpdate();
+			ResultSet rs = stmt.executeQuery(sql.SELECT_COMMENTS_LATEST);
+			
+			// 트랜잭션 종료(작업 확정)
+			conn.commit();
+			
+			if(rs.next()) {
+				article = new ArticleBean();
+				article.setNo(rs.getInt(1));
+				article.setParent(rs.getInt(2));
+				article.setContent(rs.getString(6));
+				article.setRdate(rs.getString(11).substring(2, 10));
+				article.setNick(rs.getString(12));
+			}
+
+			rs.close();
+			stmt.close();
+			psmt.close();
 		
 		} catch(Exception e){
 			e.printStackTrace();
 		}
+		
+		return article;
 		
 	}
 	

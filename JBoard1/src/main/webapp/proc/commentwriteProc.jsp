@@ -1,10 +1,11 @@
+<%@page import="com.google.gson.JsonObject"%>
 <%@page import="kr.co.jboard1.bean.ArticleBean"%>
 <%@page import="kr.co.jboard1.dao.ArticleDAO"%>
 <%@page import="kr.co.jboard1.db.sql"%>
 <%@page import="java.sql.PreparedStatement"%>
 <%@page import="kr.co.jboard1.db.DBCP"%>
 <%@page import="java.sql.Connection"%>
-<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="application/json;charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 
 	request.setCharacterEncoding("utf-8");
@@ -21,7 +22,22 @@
 	comment.setUid(uid);
 	comment.setRegip(regip);
 	
-	ArticleDAO.getInstance().insertComment(comment);
+	ArticleBean article = ArticleDAO.getInstance().insertComment(comment);
 
-	response.sendRedirect("/JBoard1/view.jsp?no="+parent+"&pg="+pg);
+	
+	//response.sendRedirect("/JBoard1/view.jsp?no="+parent+"&pg="+pg);
+	
+	//JSON 출력
+	JsonObject json = new JsonObject();
+	json.addProperty("result", 1);
+	json.addProperty("no", article.getNo());
+	json.addProperty("parent", article.getParent());
+	json.addProperty("nick", article.getNick());
+	json.addProperty("date", article.getRdate());
+	json.addProperty("content", article.getContent());
+	
+	String jsonData = json.toString();
+	out.print(jsonData);
+	
+	
 %>

@@ -64,6 +64,14 @@ public class sql {
 	public static final String SELECT_COMMENTS ="SELECT a.*, b.nick from `board_article` AS a "
 												+"JOIN `board_user` AS b USING (`uid`)  "
 												+"where `parent`=? ORDER BY `no` asc";
+	
+	public static final String SELECT_COMMENTS_LATEST = "SELECT a.*, b.nick FROM `board_article` AS a "
+														+"JOIN `board_user` AS b USING(`uid`) "
+														+"WHERE `parent` != 0 ORDER BY `no` DESC LIMIT 1";
+			
+			
+			
+			
 			
 	
 	public static final String UPDATE_ARTICLE_HIT = "UPDATE `board_article` SET `hit` = `hit` + 1 WHERE `no`=?";

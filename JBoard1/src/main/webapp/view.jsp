@@ -7,6 +7,7 @@
 <%@page import="kr.co.jboard1.db.DBCP"%>
 <%@page import="kr.co.jboard1.db.sql"%>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
+<!-- server -->
 <%
 	request.setCharacterEncoding("UTF-8");
 	String no = request.getParameter("no");
@@ -28,6 +29,55 @@
 	
 %>
 <%@ include file="./_header.jsp" %>
+<!-- client -->
+<script>
+
+	$(document).ready(function(){
+		
+		$('.commentForm > form').submit(function(){
+
+			let pg 		= $(this).children('input[name=pg]').val();
+			let parent  = $(this).children('input[name=parent]').val();
+			let uid 	= $(this).children('input[name=uid]').val();
+			let textarea = $(this).children('textarea[name=content]')
+			let content = textarea.val();
+			
+			let jsonData = {
+					"pg":pg,
+					"parent":parent,
+					"uid":uid,
+					"content":content
+			}
+			
+			$.ajax({
+				url: '/JBoard1/proc/commentwriteProc.jsp',
+				method: 'POST',
+				data: jsonData,
+				datatype: 'json',
+				success: function(data){
+					
+					console.log(data);
+					
+					let article = "<article>";
+						article += "<span class='nick'>"+data.nick+"</span>";
+						article += "<span class='date'>"+data.date+"</span>";
+						article += "<p class='content'>"+data.content+"</p>";
+						article += "<div>";
+						article += "<a href='#' class='remove'>삭제</a>";
+						article += "<a href='#' class='modify'>수정</a>";
+						article += "</div>";
+						article += "</article>";
+						
+					$('.commentList').append(article);
+					textarea.val('');
+				}
+			});
+			return false;
+		});
+		
+	});
+
+</script>
 <main id="board" class="view">
     <table>
         <caption>글보기</caption>
@@ -50,7 +100,7 @@
     <div>
         <a href="#" class="btn btnRemove">삭제</a>
         <a href="/JBoard1/modify.jsp" class="btn btnModify">수정</a>
-        <a href="/JBoard1/list.jsp?pg=<%= pg %> %>" class="btn btnList">목록</a>
+        <a href="/JBoard1/list.jsp?pg=<%= pg %>" class="btn btnList">목록</a>
     </div>
 
     <!-- 댓글목록 -->
@@ -77,7 +127,7 @@
     <!-- 댓글쓰기 -->
     <section class="commentForm">
         <h3>댓글쓰기</h3>
-        <form action="/JBoard1/proc/commentwriteProc.jsp" method="post">
+        <form action="#" method="post">
         <input type="hidden" name="pg" value="<%= pg %>"/>
         <input type="hidden" name="parent" value="<%= no %>"/>
         <input type="hidden" name="uid" value="<%= sessUser.getUid() %>"/>
