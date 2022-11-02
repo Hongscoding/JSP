@@ -34,6 +34,81 @@
 
 	$(document).ready(function(){
 		
+		// 삭제하기
+		$(document).on('click', '.remove', function(e){
+			e.preventDefault();
+			
+			let tag = $(this);
+			
+			let result = confirm('정말 삭제 하시겠습니까?');
+			
+			if(result == true){
+				
+				let no = $(this).attr('data-no');
+				
+				$.ajax({
+					url:'/JBoard1/proc/commentDeleteProc.jsp?no='+no,
+					type:'GET',
+					dataType:'json',
+					success:function(data){
+						
+						if(data.result > 0){
+							alert('삭제가 완료 되었습니다.');
+							
+							// 화면 삭제
+							tag.parent().parent().hide();
+							
+						}
+						
+					}
+				});
+				
+			}
+			
+		});
+		
+		//수정하기
+		$(document).on('click', '.modify', function(e){
+			e.preventDefault();
+
+			let txt = $(this).text();
+			let p = $(this).parent().prev();
+			
+			if(txt == '수정'){
+				// 수정모드
+				$(this).text('수정완료');
+				p.attr('contentEditable', true);
+				p.focus();
+				
+			}else{
+				// 수정완료
+				$(this).text('수정');
+				p.attr('contentEditable', false);
+				
+				let no = $(this).attr('data-no');
+				let content = p.text();
+				
+				let jsonData = {
+					"no":no,						
+					"content":content						
+				};
+				
+				$.ajax({
+					url:'/JBoard1/proc/commentModifyProc.jsp',
+					type:'POST',
+					data:jsonData,
+					dataType:'json',
+					success:function(data){
+						
+						if(data.result > 0){
+							alert('댓글이 수정되었습니다.');
+						}
+						
+					}
+				});
+			}
+		});
+		
 		$('.commentForm > form').submit(function(){
 
 			let pg 		= $(this).children('input[name=pg]').val();
@@ -63,8 +138,8 @@
 						article += "<span class='date'>"+data.date+"</span>";
 						article += "<p class='content'>"+data.content+"</p>";
 						article += "<div>";
-						article += "<a href='#' class='remove'>삭제</a>";
-						article += "<a href='#' class='modify'>수정</a>";
+						article += "<a href='#' class='remove' >삭제</a>";
+						article += "<a href='#' class='modify' >수정</a>";
 						article += "</div>";
 						article += "</article>";
 						
@@ -113,8 +188,8 @@
             <span class="date"><%= comment.getRdate() %></span>                    
             <p class="content"><%= comment.getContent() %></p>
             <div>
-                <a href="#" class="remove">삭제</a>
-                <a href="#" class="modify">수정</a>
+                <a href="#" class="remove" data-no="<%= comment.getNo() %>">삭제</a>
+                <a href="#" class="modify" data-no="<%= comment.getNo() %>">수정</a>
             </div>
         </article>             
         <% } %>   

@@ -275,6 +275,8 @@ public class ArticleDAO {
 	public void updateArticle() {}
 	public void deleteArticle() {}
 	
+	
+	
 	// 전체 게시물 카운트
 	public int selectCountTotal() {
 		
@@ -328,11 +330,43 @@ public class ArticleDAO {
 		}
 	}
 	
+	public int updateComment(String no, String content) {
+		
+		int result = 0;
+		
+		try{
+	 		Connection conn = DBCP.getConnection();
+	 		PreparedStatement psmt = conn.prepareStatement(sql.UPDATE_COMMENT);
+	 		psmt.setString(1, content);
+	 		psmt.setString(2, no);
+	 		
+			result =  psmt.executeUpdate();
+			psmt.close();
+			conn.close();
+			
+	 	} catch(Exception e){
+	 		e.printStackTrace();
+	 	}
+		return result;
 	
+	}
 	
-	
-	
-	
+	public int deleteComment(String no) {
+		int result = 0;
+		try{
+			Connection conn = DBCP.getConnection();
+			PreparedStatement psmt = conn.prepareStatement(sql.DELETE_COMMENT);
+			psmt.setString(1, no);
+			
+			result = psmt.executeUpdate();
+			
+			psmt.close();
+			conn.close();
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		return result;
+	}
 	
 	
 	
