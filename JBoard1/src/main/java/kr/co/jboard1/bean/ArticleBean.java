@@ -17,6 +17,13 @@ public class ArticleBean {
 	private String nick;
 	private String fname;
 	
+	public String getFname() {
+		return fname;
+	}
+	public void setFname(String fname) {
+		this.fname = fname;
+	}
+	
 	private int fno;
 	private String oriName;
 	private int download;
@@ -117,11 +124,5 @@ public class ArticleBean {
 	}
 	public void setRdate(String rdate) {
 		this.rdate = rdate;
-	}
-	public String getFname() {
-		return fname;
-	}
-	public void setFname(String fname) {
-		this.fname = fname;
 	}
 }

@@ -25,7 +25,7 @@
 	ArticleBean article = ArticleDAO.getInstance().insertComment(comment);
 
 	
-	//response.sendRedirect("/JBoard1/view.jsp?no="+parent+"&pg="+pg);
+	//response.sendRedirect("/JBoard1/view.jsp?no="+parent+"&pg="+
 	
 	//JSON 출력
 	JsonObject json = new JsonObject();
