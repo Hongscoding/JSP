@@ -11,6 +11,8 @@
 		
 			$(function(){
 				
+				
+				
 				// 처음 user 목록 불러오기
 				list();
 				
