@@ -25,11 +25,11 @@ function lecReg(){
 		    tags += "<td><input type='text' name='stdHp'/></td>";
 		    tags += "</tr>";
 		    tags += "<tr>";
-		    tags += "<td>학년</td>";
-		    tags += "<td><select name='stdGrade>';
-		    tags += " <option value="1학년"selected="selected">1학년</option>";
-		    tags += " <option value="2학년">2학년</option>";
-		    tags += " <option value="3학년">3학년</option>";
+		    //tags += "<td>학년</td>";
+		    //tags += "<td><select name='stdGrade'>;
+		    //tags += " <option value="1학년"selected="selected">1학년</option>";
+		    //tags += " <option value="2학년">2학년</option>";
+		    //tags += " <option value="3학년">3학년</option>";
 		    tags += "</select></td>";
 		    tags += "</tr>";
 		    tags += "<tr>";			
