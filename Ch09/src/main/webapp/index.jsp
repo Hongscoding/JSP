@@ -3,18 +3,19 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>hello</title>
-		<!-- 
-			날짜 : 2022-11-10
-			이름 : 홍민준
-			내용 : MVC 모델 실습하기		
-		 -->
+		<title>모델2 실습</title>
 	</head>
 	<body>
-		<h3>1.MVC 모델</h3>
+		<h3>모델2 실습</h3>
 		
+		<h4>기본 MVC</h4>
 		<a href="./hello.do">hello</a>
 		<a href="./welcome.do">welcome</a>
 		<a href="./greeting.do">greeting</a>
+		
+		<h4>user1 실습</h4>
+		<a href="/Ch09/user1/list.do">list</a>
+		<a href="/Ch09/user1/register.do">register</a>
+				
 	</body>
 </html>
