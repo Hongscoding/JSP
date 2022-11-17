@@ -2,18 +2,22 @@
 <%@page import="kr.co.farmstory1.bean.ArticleBean"%>
 <%@page import="kr.co.farmstory1.dao.ArticleDAO"%>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="../_header.jsp" %>
+<%@ include file="/_header.jsp" %>
 <%
+	if(sessUser == null){
+		response.sendRedirect("/Farmstory1/user/login.jsp?success=101");
+		return;
+	}
+	request.setCharacterEncoding("UTF-8");
 	String group = request.getParameter("group");
-	String cate = request.getParameter("cate");	
+	String cate  = request.getParameter("cate");
 	String no = request.getParameter("no");
 	String pg = request.getParameter("pg");
-
 	// DAO 객체 가져오기
 	ArticleDAO dao = ArticleDAO.getInstance();
 	
 	// 글 조회수 카운트 +1
-	dao.deleteArticle(no);
+	dao.updateArticleHit(no);
 	
 	// 글 가져오기
 	ArticleBean article = dao.selectArticle(no);
@@ -24,121 +28,126 @@
 	pageContext.include("./_"+group+".jsp");
 %>
 <script>
-$(document).ready(function(){
-	// 삭제하기
-	$(document).on('click', '.remove', function(e){
-		e.preventDefault();
+	$(document).ready(function(){
 		
-		let tag = $(this);
-		let result = confirm('정말 삭제 하시겠습니까?');
-		
-		if(result){
+		// 삭제하기
+		$(document).on('click', '.remove', function(e){
+			e.preventDefault();
 			
-			let no = $(this).attr('data-no');
+			let tag = $(this);
+			let result = confirm('정말 삭제 하시겠습니까?');
 			
-			$.ajax({
-				url: './proc/commentDeleteProc.jsp?no='+no,
-				type: 'GET',
-				dataType: 'json',
-				success: function(data){
-					
-					if(data.result > 0){
-						alert('댓글이 삭제 되었습니다.');
+			if(result){
+				
+				let no = $(this).attr('data-no');
+				
+				$.ajax({
+					url: './proc/commentDeleteProc.jsp?no='+no,
+					type: 'GET',
+					dataType: 'json',
+					success: function(data){
 						
-						// 화면삭제
-						tag.closest('article').hide();
+						if(data.result > 0){
+							alert('댓글이 삭제 되었습니다.');
+							
+							// 화면삭제
+							tag.closest('article').hide();
+						}
 					}
-				}
-			});
-		}
-	});
-	
-	// 수정하기
-	$(document).on('click', '.modify', function(e){
-		e.preventDefault();
+				});
+			}
+		});
 		
-		let txt = $(this).text();
-		let p = $(this).parent().prev();
+		// 수정하기
+		$(document).on('click', '.modify', function(e){
+			e.preventDefault();
+			
+			let txt = $(this).text();
+			let p = $(this).parent().prev();
+			
+			if(txt == '수정'){
+				// 수정모드
+				$(this).text('수정완료');				
+				p.attr('contentEditable', true);
+				p.focus();
+			}else{
+				// 수정완료
+				$(this).text('수정');
+				p.attr('contentEditable', false);	
+				
+				let no = $(this).attr('data-no');
+				let content = p.text();
+				
+				let jsonData = {
+					"no": no,
+					"content": content
+				};
+				
+				$.ajax({
+					url: './proc/commentModifyProc.jsp',
+					type: 'POST',
+					data: jsonData,
+					dataType: 'json',
+					success: function(data){
+						
+						if(data.result > 0){
+							alert('댓글이 수정되었습니다.');
+						}
+					}
+				});
+			}
+			
+			
+		});
 		
-		if(txt == '수정'){
-			// 수정모드
-			$(this).text('수정완료');				
-			p.attr('contentEditable', true);
-			p.focus();
-		}else{
-			// 수정완료
-			$(this).text('수정');
-			p.attr('contentEditable', false);	
+		// 댓글쓰기
+		$('.commentForm > form').submit(function(){
 			
-			let no = $(this).attr('data-no');
-			let content = p.text();
-			
+			let pg 		= $(this).children('input[name=pg]').val();
+			let parent 	= $(this).children('input[name=parent]').val();
+			let uid 	= $(this).children('input[name=uid]').val();
+			let textarea = $(this).children('textarea[name=content]');
+			let content  = textarea.val();
+						
 			let jsonData = {
-				"no": no,
-				"content": content
+				"pg":pg,
+				"parent":parent,
+				"uid":uid,
+				"content":content
 			};
 			
+			console.log(jsonData);
+			
 			$.ajax({
-				url: './proc/commentModifyProc.jsp',
-				type: 'POST',
+				url : './proc/commentWriteProc.jsp',
+				method: 'POST',
 				data: jsonData,
 				dataType: 'json',
 				success: function(data){
-					if(data.result > 0){
-						alert('댓글이 수정되었습니다.');
-					}
+					
+					console.log(data);
+					
+					let article = "<article>";
+						article += "<span class='nick'>"+data.nick+"</span>";
+						article += "<span class='date'>"+data.date+"</span>";
+						article += "<p class='content'>"+data.content+"</p>";
+						article += "<div>";
+						article += "<a href='#' class='remove' data-no='"+data.no+"'>삭제</a>";
+						article += "<a href='#' class='modify' data-no='"+data.no+"'>수정</a>";
+						article += "</div>";
+						article += "</article>";
+					
+					$('.commentList > .empty').hide();
+					$('.commentList').append(article);
+					textarea.val('');
 				}
 			});
-		}
-	});
-	// 댓글쓰기
-	$('.commentForm > form').submit(function(){
-		
-		let pg 		= $(this).children('input[name=pg]').val();
-		let parent 	= $(this).children('input[name=parent]').val();
-		let uid 	= $(this).children('input[name=uid]').val();
-		let textarea = $(this).children('textarea[name=content]');
-		let content  = textarea.val();
-					
-		let jsonData = {
-			"pg":pg,
-			"parent":parent,
-			"uid":uid,
-			"content":content
-		};
-		
-		console.log(jsonData);
-		
-		$.ajax({
-			url : './proc/commentWriteProc.jsp',
-			method: 'POST',
-			data: jsonData,
-			dataType: 'json',
-			success: function(data){
-				
-				console.log(data);
-				
-				let article = "<article>";
-					article += "<span class='nick'>"+data.nick+"</span>";
-					article += "<span class='date'>"+data.date+"</span>";
-					article += "<p class='content'>"+data.content+"</p>";
-					article += "<div>";
-					article += "<a href='#' class='remove' data-no='"+data.no+"'>삭제</a>";
-					article += "<a href='#' class='modify' data-no='"+data.no+"'>수정</a>";
-					article += "</div>";
-					article += "</article>";
-				
-				$('.commentList > .empty').hide();
-				$('.commentList').append(article);
-				textarea.val('');
-			}
-		});
 			
-		return false;
+			return false;
+		});
 	});
-});
 </script>
-		<main id="board" class="view">
+        <main id="board" class="view">
 		    <table>
 		        <caption>글보기</caption>
 		        <tr>
@@ -148,7 +157,7 @@ $(document).ready(function(){
 		        <% if(article.getFile() > 0){ %>
 		        <tr>
 		            <th>파일</th>
-		            <td><a href="/Farmstory1/proc/download.jsp?fno=<%= article.getFno() %>"><%= article.getOriName() %></a>&nbsp;<span><%= article.getDownload() %></span>회 다운로드</td>
+		            <td><a href="./proc/download.jsp?fno=<%= article.getFno() %>"><%= article.getOriName() %></a>&nbsp;<span><%= article.getDownload() %></span>회 다운로드</td>
 		        </tr>
 		        <% } %>
 		        <tr>
@@ -158,10 +167,10 @@ $(document).ready(function(){
 		    </table>
 		    <div>
 		    	<% if(sessUser.getUid().equals(article.getUid())){ %>
-		        <a href="./proc/delete.jsp?group=<%= group %>&cate=<%= cate %>&pg<%= pg %>" class="btn btnRemove">삭제</a>
-		        <a href="./modify.jsp?group=<%= group %>&cate=<%= cate %>&pg<%= pg %>" class="btn btnModify">수정</a>
+		        <a href="./proc/deleteProc.jsp?group=<%= group %>&cate=<%= cate %>&no=<%= article.getNo() %>&pg=<%= pg %>" class="btn btnRemove">삭제</a>
+		        <a href="./modify.jsp?group=<%= group %>&cate=<%= cate %>&no=<%= article.getNo() %>&pg=<%= pg %>" class="btn btnModify">수정</a>
 		        <% } %>
-		        <a href="./list.jsp?group=<%= group %>&cate=<%= cate %>&pg<%= pg %>" class="btn btnList">목록</a>
+		        <a href="./list.jsp?group=<%= group %>&cate=<%= cate %>&pg=<%= pg %>" class="btn btnList">목록</a>
 		    </div>
 		
 		    <!-- 댓글목록 -->
@@ -178,20 +187,23 @@ $(document).ready(function(){
 		                <a href="#" class="remove" data-no="<%= comment.getNo() %>">삭제</a>
 		                <a href="#" class="modify" data-no="<%= comment.getNo() %>">수정</a>
 		            </div>
-	                <% } %>
-		        </article>    
-		        <% } %>            
-		        <% if(comments.size() == 0){ %>   
+		            <% } %>
+		        </article>
+		        <% } %>
+		            
+		        <% if(comments.size() == 0){ %>            
 		        <p class="empty">등록된 댓글이 없습니다.</p>
 		        <% } %>
+		        
 		    </section>
+		
 		    <!-- 댓글쓰기 -->
 		    <section class="commentForm">
 		        <h3>댓글쓰기</h3>
-		        <form action="#">
-		  	 	    <input type="hidden" name="pg" value="<%= pg %>">
-        			<input type="hidden" name="parent" value="<%= no %>">
-        			<input type="hidden" name="uid" value="<%= sessUser.getUid() %>">
+		        <form action="#" method="post">
+		        	<input type="hidden" name="pg" value="<%= pg %>">
+		        	<input type="hidden" name="parent" value="<%= no %>">
+		        	<input type="hidden" name="uid" value="<%= sessUser.getUid() %>">
 		            <textarea name="content" placeholder="댓글내용 입력"></textarea>
 		            <div>
 		                <a href="#" class="btn btnCancel">취소</a>
@@ -200,7 +212,8 @@ $(document).ready(function(){
 		        </form>
 		    </section>
 		</main>
- 	 </article>
+        </article>
     </section>
 </div>
+
 <%@ include file="../_footer.jsp" %>
