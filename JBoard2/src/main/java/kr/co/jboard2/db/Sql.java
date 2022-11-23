@@ -19,7 +19,9 @@ public class Sql {
 	public static final String SELECT_COUNT_UID  = "select count(`uid`) from `board_user` where `uid`=?";
 	public static final String SELECT_COUNT_NICK = "select count(`nick`) from `board_user` where `nick`=?";
 	public static final String SELECT_TERMS      = "select * from `board_terms`";
-	
+	public static final String SELECT_USER_FOR_FIND_ID ="SELECT `uid`, `name`, `email`, `rdate` FROM `board_user` WHERE `name`=? and `email`=?";
+	public static final String SELECT_USER_FOR_FIND_PW ="SELECT count(`uid`) FROM `board_user` WHERE `uid`=? and `email`=?";
+	public static final String UPDATE_USER_PASSWORD = "update `board_user` set `pass`=SHA2(?, 256) where `uid`=?";
 	// board
 	public static final String INSERT_ARTICLE = "insert into `board_article` set "
 												+ "`title`=?,"
