@@ -4,13 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <title>게시판</title>
-    <link rel="stylesheet" href=" ${pageContext.request.contextPath}/css/style.css?v=3"/>
+    <link rel="stylesheet" href="/JBoard2/css/style.css"/>
     <style>
         #board > .list > form {
             float: right;
             margin-bottom: -14px;
         }
-
         #board > .list > form > input[name=search]{
             width: 200px;
             height: 26px;
@@ -31,7 +30,6 @@
             <h3>Board System v2.0</h3>
             <p>
                 <span>${sessUser.nick}</span>님 반갑습니다.
-                <a href="/JBoard2/user/logout.do">[로그아웃]</a>
+                <a href="/JBoard2/user/logout.do?uid=${sessUser.uid}">[로그아웃]</a>
             </p>
         </header>
-        
