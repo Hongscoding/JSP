@@ -151,6 +151,7 @@ public class UserDAO extends DBHelper {
 				vo.setAddr2(rs.getString(10));
 				vo.setRegip(rs.getString(11));
 				vo.setRdate(rs.getString(12));
+				vo.setWdate(rs.getString(13));
 			}
 			
 			close();
@@ -186,6 +187,7 @@ public class UserDAO extends DBHelper {
 				vo.setAddr2(rs.getString(10));
 				vo.setRegip(rs.getString(11));
 				vo.setRdate(rs.getString(12));
+				vo.setWdate(rs.getString(13));
 				users.add(vo);
 			}
 			close();
@@ -277,6 +279,7 @@ public class UserDAO extends DBHelper {
 				vo.setAddr2(rs.getString(10));
 				vo.setRegip(rs.getString(11));
 				vo.setRdate(rs.getString(12));
+				vo.setWdate(rs.getString(13));
 			}
 			close();
 			
@@ -330,6 +333,27 @@ public class UserDAO extends DBHelper {
 			psmt.setString(1, uid);
 			psmt.executeUpdate();
 			close();
+		}catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+	}
+	
+	public void updateUserModify(UserVO vo) {
+		try {
+			logger.info("updateUserModify...");
+			conn = getConnection();
+			psmt = conn.prepareStatement(Sql.UPDATE_USER_MODIFY);
+			psmt.setString(1, vo.getName());
+			psmt.setString(2, vo.getNick());
+			psmt.setString(3, vo.getEmail());
+			psmt.setString(4, vo.getHp());
+			psmt.setString(5, vo.getZip());
+			psmt.setString(6, vo.getAddr1());
+			psmt.setString(7, vo.getAddr2());
+			psmt.setString(8, vo.getUid());
+			psmt.executeUpdate();
+			close();
+			
 		}catch (Exception e) {
 			logger.error(e.getMessage());
 		}

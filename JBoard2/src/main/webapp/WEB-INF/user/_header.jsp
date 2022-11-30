@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>게시판</title>
-    <link rel="stylesheet" href=" ${pageContext.request.contextPath}/css/style.css?v=3"/>
+    <link rel="stylesheet" href="/JBoard2/css/style.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 </head>
 <body>
