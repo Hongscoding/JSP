@@ -1,4 +1,12 @@
+<%@page import="kr.co.farmstory2.vo.UserVO"%>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+	
+	request.setCharacterEncoding("UTF-8");
+	String success = request.getParameter("success");
+	
+	UserVO sessUser = (UserVO) session.getAttribute("sessUser");
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>

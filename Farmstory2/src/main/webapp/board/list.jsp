@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core"%>
 <jsp:include page="../WEB-INF/_header.jsp"/>
 <jsp:include page="./_${group}.jsp"/>
 <main id="board">
@@ -15,23 +16,29 @@
                 <th>글쓴이</th>
                 <th>날짜</th>
                 <th>조회</th>
-            </tr>                    
+            </tr>            
+            <c:forEach var="article" items="${articles}">        
             <tr>
-                <td>1</td>
-                <td><a href="./view.do?group=${group}&cate=${cate}">테스트 제목입니다.[3]</a></td>
-                <td>길동이</td>
-                <td>20-05-12</td>
-                <td>12</td>
+                <td>${pageStartNum = pageStartNum - 1}</td>
+                <td><a href="./view.do?group=${group}&cate=${cate}&no=${article.no}&pg=${pg}">${article.title}[${article.comment}]</a></td>
+                <td>${article.nick}</td>
+                <td>${article.rdate.substring(2,10)}</td>
+                <td>${article.hit}</td>
             </tr>
+            </c:forEach>
         </table>
         <div class="page">
-            <a href="#" class="prev">이전</a>
-            <a href="#" class="num current">1</a>
-            <a href="#" class="num">2</a>
-            <a href="#" class="num">3</a>
-            <a href="#" class="next">다음</a>
+        	<c:if test="${pageGroupStart > 1}">
+            <a href="/Farmstory2/board/list.do?pg=${pageGroupStart - 1}" class="prev">이전</a>
+            </c:if>
+            <c:forEach var="num" begin="${pageGroupStart }" end="${pageGroupEnd }">
+            <a href="/Farmstory2/board/list.do?pg=${num}&group=${group}&cate=${cate}" class="num ${num == currentPage ? 'current':'off' }">${num }</a>
+            </c:forEach>
+        	<c:if test="${pageGroupEnd < lastPageNum}">
+            <a href="/Farmstory2/board/list.do?pg=${pageGroupEnd + 1}" class="next">다음</a>
+            </c:if>
         </div>
-        <a href="./write.do?group=${group}&cate=${cate}" class="btn btnWrite">글쓰기</a>
+        <a href="/Farmstory2/board/write.do?group=${group}&cate=${cate}" class="btn btnWrite">글쓰기</a>
     </section>
 </main>
 <jsp:include page="../WEB-INF/_footer.jsp"/>
