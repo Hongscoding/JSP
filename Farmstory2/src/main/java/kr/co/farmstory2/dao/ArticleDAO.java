@@ -88,6 +88,7 @@ public class ArticleDAO extends DBHelper {
 		ArticleVO article = null;
 		
 		try{
+			logger.info("insertComment start...");
 			Connection conn = getConnection();
 			
 			// 트랜잭션 시작
@@ -122,7 +123,7 @@ public class ArticleDAO extends DBHelper {
 			conn.close();
 			
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		
 		return article;
@@ -132,6 +133,7 @@ public class ArticleDAO extends DBHelper {
 		ArticleVO article = null;
 		
 		try{
+			logger.info("selectArticle start...");
 			Connection conn = getConnection();
 			PreparedStatement psmt = conn.prepareStatement(Sql.SELECT_ARTICLE);
 			psmt.setString(1, no);
@@ -160,7 +162,7 @@ public class ArticleDAO extends DBHelper {
 			psmt.close();
 			conn.close();
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		
 		return article;
@@ -171,6 +173,7 @@ public class ArticleDAO extends DBHelper {
 		List<ArticleVO> articles = new ArrayList<>();	
 		
 		try{
+			logger.info("selectArticles start...");
 			conn = getConnection();
 			psmt = conn.prepareStatement(Sql.SELECT_ARTICLES);
 			psmt.setInt(1, start);
@@ -196,7 +199,7 @@ public class ArticleDAO extends DBHelper {
 			}
 			close();
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		
 		return articles;
@@ -207,6 +210,7 @@ public class ArticleDAO extends DBHelper {
 		FileVO fb = null;
 		
 		try{
+			logger.info("selectFile start...");
 			Connection conn = getConnection();
 			PreparedStatement psmt = conn.prepareStatement(Sql.SELECT_FILE);
 			psmt.setString(1, fno);
@@ -227,7 +231,7 @@ public class ArticleDAO extends DBHelper {
 			psmt.close();
 			conn.close();
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return fb;
 	}
@@ -237,6 +241,7 @@ public class ArticleDAO extends DBHelper {
 		List<ArticleVO> comments = new ArrayList<>();
 		
 		try {
+			logger.info("selectComments start...");
 			Connection conn = getConnection();
 			PreparedStatement psmt = conn.prepareStatement(Sql.SELECT_COMMENTS);
 			psmt.setString(1, parent);
@@ -265,7 +270,7 @@ public class ArticleDAO extends DBHelper {
 			conn.close();
 			
 		}catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		
 		return comments;
@@ -274,6 +279,7 @@ public class ArticleDAO extends DBHelper {
 	public void updateArticle(String no, String title, String content) {
 		
 		try {
+			logger.info("updateArticle start...");
 			conn = getConnection();
 			psmt = conn.prepareStatement(Sql.UPDATE_ARTICLE);
 			psmt.setString(1, title);
@@ -297,7 +303,7 @@ public class ArticleDAO extends DBHelper {
 			psmt.close();
 			conn.close();
 		}catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 	}
 	

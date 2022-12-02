@@ -50,6 +50,7 @@ public class ViewController extends HttpServlet{
 		req.setAttribute("article", article);
 		req.setAttribute("comments", comments);
 		req.setAttribute("pg", pg);
+		req.setAttribute("no", no);
 		
 		RequestDispatcher dispatcher = req.getRequestDispatcher("/board/view.jsp");
 		dispatcher.forward(req, resp);
@@ -58,8 +59,5 @@ public class ViewController extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 	}
-	public static void main(String[] args) {
-	}
-	
 
 }

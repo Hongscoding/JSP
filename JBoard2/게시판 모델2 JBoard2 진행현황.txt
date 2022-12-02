@@ -1,0 +1,17 @@
+2022-11-25
+modify - view에서 a태그 get 이동 오류 
+delete, view 
+
+2022-11-30
+회원정보 수정
+form = post 요청 
+pass변경은 ajax passchangecontroller 새로 만들어서 
+ajax url로 post 요청
+탈퇴는 pass랑 비슷한 로직으로
+
+2022-12-01
+view 댓글 기능구현 x
+
+
+2022-12-02
+배포x 

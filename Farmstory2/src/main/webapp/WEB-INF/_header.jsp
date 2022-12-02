@@ -6,6 +6,7 @@
 	String success = request.getParameter("success");
 	
 	UserVO sessUser = (UserVO) session.getAttribute("sessUser");
+	
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,6 +32,14 @@
 
             $('#tabs').tabs();
         });
+        
+		let success = "<%= success %>";
+        
+        if(success == '100'){
+        	alert('일치하는 회원이 없습니다.\n아이디, 비밀번호를 다시 확인하세요');
+        }else if(success == '101'){
+        	alert('먼저 로그인 하세요');
+        }
     </script>
 
 </head>
@@ -39,10 +48,14 @@
         <header>
             <a href="/Farmstory2/" class="logo"><img src="/Farmstory2/img/logo.png" alt="로고"/></a>
             <p>
-                <a href="/Farmstory2/">HOME |</a>
+                <a href="#">HOME |</a>
+                <% if(sessUser == null){ %>
                 <a href="/Farmstory2/user/login.do">로그인 |</a>
                 <a href="/Farmstory2/user/terms.do">회원가입 |</a>
-                <a href="/Farmstory2/board/list.do">고객센터</a>
+                <% }else{ %>
+                <a href="/Farmstory2/user/logout.do">로그아웃</a>
+                <% } %>
+                <a href="#">고객센터</a>
             </p>
             <img src="/Farmstory2/img/head_txt_img.png" alt="3만원 이상 무료배송"/>
             

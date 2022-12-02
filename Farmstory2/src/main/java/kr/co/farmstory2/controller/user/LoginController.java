@@ -34,7 +34,7 @@ public class LoginController extends HttpServlet{
 		// 데이터 수신
 		String uid = req.getParameter("uid");
 		String pass = req.getParameter("pass");
-		String saveUid = req.getParameter("saveUid");
+		//String saveUid = req.getParameter("saveUid");
 		
 		// 데이터베이스 처리
 		UserVO vo = UserDAO.getInstance().selectUser(uid, pass);
@@ -47,7 +47,7 @@ public class LoginController extends HttpServlet{
 			
 			
 		}else {
-			resp.sendRedirect("/Farmstory2/user/login.do?=success=100");
+			resp.sendRedirect("/Farmstory2/user/login.do?success=100");
 			
 		}
 		

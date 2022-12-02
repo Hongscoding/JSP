@@ -24,6 +24,7 @@ public class ArticleVO {
 		this.fname = fname;
 	}
 	
+	// 추가 필드
 	private int fno;
 	private String oriName;
 	private int download;
