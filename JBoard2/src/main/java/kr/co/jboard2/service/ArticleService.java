@@ -43,8 +43,8 @@ public enum ArticleService {
 	public void updateArticle(String no, String title, String content) {
 		dao.updateArticle(no, title, content);
 	}
-	public void deleteArticle() {
-		
+	public void deleteArticle(String no) {
+		dao.deleteArticle(no);
 	}
 	
 	public MultipartRequest uploadFile(HttpServletRequest req, String path) throws IOException {
